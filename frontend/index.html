@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rashmi Rawat — Ask before you decide</title>
+<meta name="description" content="An interactive conversation with my resume — ask about the work, the stack, or attach a job description to check fit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,420;9..144,560&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+:root{
+  --bg:#0d0f12;
+  --bg2:#15181c;
+  --bg3:#1c2025;
+  --fg:#eceae4;
+  --muted:#8b9098;
+  --line:#262a2f;
+  --accent:#c9a227;
+  --accent-soft:rgba(201,162,39,.14);
+  --shadow:0 8px 24px rgba(0,0,0,.35);
+}
+
+[data-theme="light"]{
+  --bg:#f2f1ec;
+  --bg2:#e8e6dd;
+  --bg3:#dedbcf;
+  --fg:#1c1e1a;
+  --muted:#63665f;
+  --line:#d6d3c6;
+  --accent:#8a6d12;
+  --accent-soft:rgba(138,109,18,.10);
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  height:100%;
+  margin:0;
+  overflow:hidden;
+}
+
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  transition:background .35s ease,color .35s ease;
+  -webkit-font-smoothing:antialiased;
+}
+
+a{
+  color:inherit;
+}
+
+::selection{
+  background:var(--accent);
+  color:#111;
+}
+
+button{
+  font-family:inherit;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+  display:flex;
+  height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+  width:250px;
+  flex-shrink:0;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  padding:20px 16px;
+  background:var(--bg2);
+}
+
+.wordmark{
+  font-weight:600;
+  font-size:.95rem;
+  margin:0 0 20px 4px;
+  letter-spacing:.01em;
+}
+
+.new-btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  text-align:left;
+  background:var(--bg3);
+  border:1px solid var(--line);
+  color:var(--fg);
+  padding:11px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:.88rem;
+  transition:border-color .2s,transform .15s,box-shadow .2s;
+}
+
+.new-btn:hover{
+  border-color:var(--accent);
+  box-shadow:var(--shadow);
+  transform:translateY(-1px);
+}
+
+.sidebar-links{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.sidebar-links a{
+  font-size:.85rem;
+  color:var(--muted);
+  padding:9px 10px;
+  border-radius:8px;
+  text-decoration:none;
+  transition:background .15s,color .15s;
+}
+
+.sidebar-links a:hover{
+  background:var(--bg3);
+  color:var(--accent);
+}
+
+.theme-btn{
+  background:var(--bg3);
+  border:1px solid var(--line);
+  color:var(--muted);
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:.8rem;
+  margin-top:12px;
+  transition:border-color .2s,color .2s;
+}
+
+.theme-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  height:100vh;
+}
+
+.stage{
+  flex:1;
+  min-height:0;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+
+/* =========================
+   LANDING
+========================= */
+
+.landing{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  max-width:640px;
+  margin:0 auto;
+  padding:0 28px;
+  width:100%;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:.9rem;
+  margin-bottom:20px;
+}
+
+.status .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 0 var(--accent-soft);
+  animation:pulse 2.4s infinite;
+}
+
+@keyframes pulse{
+  0%{
+    box-shadow:0 0 0 0 var(--accent-soft);
+  }
+
+  70%{
+    box-shadow:0 0 0 8px transparent;
+  }
+
+  100%{
+    box-shadow:0 0 0 0 transparent;
+  }
+}
+
+h1{
+  font-family:'Fraunces',Georgia,serif;
+  font-weight:560;
+  font-optical-sizing:auto;
+  font-size:clamp(1.7rem,5.5vw,2.9rem);
+  line-height:1.14;
+  letter-spacing:-.01em;
+  margin:0 0 16px;
+  max-width:14ch;
+  clip-path:inset(0 100% 0 0);
+  animation:reveal 1s cubic-bezier(.65,0,.35,1) .15s forwards;
+}
+
+@keyframes reveal{
+  to{
+    clip-path:inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  h1{
+    animation:none;
+    clip-path:inset(0);
+  }
+
+  .status .dot{
+    animation:none;
+  }
+}
+
+.sub{
+  color:var(--muted);
+  font-size:clamp(.92rem,2.4vw,1rem);
+  line-height:1.6;
+  max-width:46ch;
+  margin:0 0 24px;
+}
+
+.prompts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.prompt-btn{
+  font-size:.83rem;
+  color:var(--fg);
+  background:var(--bg2);
+  border:1px solid var(--line);
+  padding:10px 14px;
+  border-radius:100px;
+  cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s;
+}
+
+.prompt-btn:hover{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  transform:translateY(-1px);
+}
+
+/* =========================
+   TRANSCRIPT
+========================= */
+
+.transcript{
+  flex:1;
+  overflow-y:auto;
+  padding:24px 28px 12px;
+  -webkit-overflow-scrolling:touch;
+}
+
+.transcript-inner{
+  max-width:640px;
+  margin:0 auto;
+}
+
+.turn{
+  margin-bottom:26px;
+  animation:rise .4s ease both;
+}
+
+@keyframes rise{
+  from{
+    opacity:0;
+    transform:translateY(6px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.turn .who{
+  font-size:.78rem;
+  font-weight:600;
+  margin-bottom:6px;
+  color:var(--muted);
+}
+
+.turn.assistant .who{
+  color:var(--accent);
+}
+
+.turn.assistant .body{
+  border-left:2px solid var(--accent-soft);
+  padding-left:16px;
+}
+
+.turn .body{
+  font-size:.98rem;
+  line-height:1.65;
+  word-wrap:break-word;
+}
+
+.turn .body p{
+  margin:0 0 .7em;
+}
+
+.turn .body p:last-child{
+  margin-bottom:0;
+}
+
+.turn .body pre{
+  background:var(--bg2);
+  border:1px solid var(--line);
+  padding:.7em .9em;
+  border-radius:8px;
+  overflow-x:auto;
+  font-size:.85em;
+}
+
+.turn .body code{
+  font-family:ui-monospace,monospace;
+  font-size:.88em;
+}
+
+.turn .body ul{
+  margin:0 0 .7em 1.2em;
+}
+
+.turn .body a{
+  color:var(--accent);
+  text-decoration:underline;
+}
+
+.cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:var(--accent);
+  vertical-align:-2px;
+  animation:blink 1s step-end infinite;
+}
+
+@keyframes blink{
+  50%{
+    opacity:0;
+  }
+}
+
+.actions{
+  display:flex;
+  gap:14px;
+  margin-top:8px;
+  opacity:0;
+  transition:opacity .15s;
+}
+
+.turn.assistant:hover .actions,
+.turn.assistant:focus-within .actions{
+  opacity:1;
+}
+
+.actions button{
+  font-size:.78rem;
+  color:var(--muted);
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:0;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+.actions button:hover{
+  color:var(--accent);
+}
+
+.error{
+  font-size:.85rem;
+  color:#e5484d;
+  padding:8px 0;
+}
+
+/* =========================
+   INPUT BAR
+========================= */
+
+.inputbar-outer{
+  padding:0 28px 18px;
+}
+
+.inputbar-inner{
+  max-width:640px;
+  margin:0 auto;
+}
+
+.jd-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:.8rem;
+  color:var(--accent);
+  background:var(--accent-soft);
+  border-radius:100px;
+  padding:6px 12px;
+  margin-bottom:10px;
+}
+
+.jd-tag button{
+  background:none;
+  border:none;
+  color:inherit;
+  cursor:pointer;
+  font-size:.9rem;
+  line-height:1;
+  padding:0;
+}
+
+.inputbar{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  background:var(--bg2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:8px;
+  box-shadow:var(--shadow);
+}
+
+.icon-btn{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--bg3);
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex-shrink:0;
+  font-size:1.1rem;
+  transition:border-color .2s,color .2s;
+}
+
+.icon-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.inputbar textarea{
+  flex:1;
+  min-width:0;
+  background:none;
+  border:none;
+  outline:none;
+  resize:none;
+  color:var(--fg);
+  font-family:inherit;
+  font-size:.96rem;
+  line-height:1.5;
+  max-height:120px;
+  padding:9px 4px;
+}
+
+.inputbar textarea::placeholder{
+  color:var(--muted);
+}
+
+.send-btn{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  border:none;
+  background:var(--accent);
+  color:#141414;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:transform .15s,opacity .15s;
+}
+
+.send-btn:hover{
+  transform:translateY(-1px);
+}
+
+.send-btn:disabled{
+  opacity:.5;
+  cursor:default;
+  transform:none;
+}
+
+.hint{
+  font-size:.75rem;
+  color:var(--muted);
+  margin-top:8px;
+  text-align:center;
+  padding:0 8px;
+}
+
+/* =========================
+   TABLET
+   Keep sidebar normal
+========================= */
+
+@media (max-width:1024px) and (min-width:641px){
+
+  .sidebar{
+    width:220px;
+    padding:18px 14px;
+  }
+
+  .new-btn{
+    font-size:.85rem;
+  }
+
+  .landing{
+    padding:0 24px;
+  }
+
+  .transcript{
+    padding-left:24px;
+    padding-right:24px;
+  }
+
+  .inputbar-outer{
+    padding-left:24px;
+    padding-right:24px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:640px){
+
+  html,
+  body{
+    overflow:auto;
+    height:auto;
+  }
+
+  .app{
+    flex-direction:column;
+    height:auto;
+    min-height:100vh;
+  }
+
+  .sidebar{
+    width:100%;
+    flex-direction:row;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    border-right:none;
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+
+  .wordmark{
+    display:none;
+  }
+
+  .new-btn{
+    width:auto;
+    flex:0 0 auto;
+    padding:10px 13px;
+    font-size:.82rem;
+    justify-content:center;
+  }
+
+  .sidebar-links{
+    margin-top:0;
+    flex-direction:row;
+    gap:4px;
+    flex-shrink:0;
+  }
+
+  .sidebar-links a{
+    padding:9px 8px;
+    white-space:nowrap;
+  }
+
+  .theme-btn{
+    margin-top:0;
+    flex-shrink:0;
+  }
+
+  .main{
+    height:calc(100vh - 61px);
+    min-height:500px;
+  }
+
+  .landing{
+    padding:0 18px;
+  }
+
+  .transcript{
+    padding:18px 16px 8px;
+  }
+
+  .inputbar-outer{
+    padding:0 16px 14px;
+  }
+
+  .icon-btn,
+  .send-btn{
+    width:42px;
+    height:42px;
+  }
+
+  .prompts{
+    gap:6px;
+  }
+
+  .prompt-btn{
+    font-size:.8rem;
+    padding:9px 12px;
+  }
+
+  .turn .body{
+    font-size:.94rem;
+  }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width:380px){
+
+  .sidebar{
+    padding:8px 10px;
+  }
+
+  .new-btn{
+    padding:9px 10px;
+    font-size:.78rem;
+  }
+
+  .sidebar-links{
+    gap:2px;
+  }
+
+  .sidebar-links a{
+    padding:8px 6px;
+    font-size:.76rem;
+  }
+
+  .theme-btn{
+    width:32px;
+    height:32px;
+  }
+
+  .main{
+    height:calc(100vh - 55px);
+  }
+
+  .landing{
+    padding:0 14px;
+  }
+
+  .inputbar-outer{
+    padding-left:10px;
+    padding-right:10px;
+  }
+}
+</style>
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="wordmark">Rashmi Rawat</div>
+    <button class="new-btn" id="newConvo">+ New conversation</button>
+    <div class="sidebar-links">
+      <a href="http://localhost:8000/resume" target="_blank"class="underline">Download résumé</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
+      <a href="mailto:you@example.com">Email</a>
+    </div>
+    <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">◐</button>
+  </aside>
+
+  <div class="main">
+    <div class="stage">
+      <div class="landing" id="landing">
+        <div class="status"><span class="dot"></span>Open to new roles, based in Bengaluru</div>
+        <h1>Ask before you decide.</h1>
+        <p class="sub">I've put my resume behind an assistant that only answers from what's actually true about my work. Ask about the projects, the stack, or attach a job description to check fit.</p>
+        <div class="prompts">
+          <button class="prompt-btn">What have you built recently?</button>
+          <button class="prompt-btn">What's your strongest stack?</button>
+          <button class="prompt-btn">Am I a fit for this role?</button>
+        </div>
+      </div>
+      <div class="transcript" id="transcript" style="display:none">
+        <div class="transcript-inner">
+          <div id="messages"></div>
+          <div id="errorBox" class="error" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inputbar-outer">
+      <div class="inputbar-inner">
+        <div class="jd-tag" id="jdTag" style="display:none">
+          <span id="jdName"></span><button id="jdClear" aria-label="Remove job description">×</button>
+        </div>
+        <form class="inputbar" id="chatForm">
+          <button type="button" class="icon-btn" id="jdBtn" title="Attach a job description">+</button>
+          <input type="file" id="jdFile" accept=".pdf,.docx,.txt" hidden>
+          <textarea id="input" rows="1" placeholder="Ask a question, or attach a JD with + to check fit…"></textarea>
+          <button type="submit" class="send-btn" id="sendBtn" aria-label="Send">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </form>
+        <div class="hint">HR? Click + to upload the job description before asking about fit.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHAT_ENDPOINT = "http://localhost:8000/chat";
+const JD_ENDPOINT = "http://localhost:8000/parse-jd";
+let history = [];
+let lastUserMsg = null;
+let jobDescription = null;
+
+const $ = s => document.querySelector(s);
+const messagesEl = $('#messages'), form = $('#chatForm'), input = $('#input'),
+      landing = $('#landing'), transcript = $('#transcript'), errorBox = $('#errorBox'),
+      sendBtn = $('#sendBtn'), jdBtn = $('#jdBtn'), jdFile = $('#jdFile'),
+      jdTag = $('#jdTag'), jdName = $('#jdName');
+
+$('#themeToggle').onclick = () => {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+};
+
+$('#newConvo').onclick = () => {
+  history = []; lastUserMsg = null; jobDescription = null;
+  messagesEl.innerHTML = ''; jdTag.style.display = 'none';
+  transcript.style.display = 'none'; landing.style.display = 'flex';
+};
+
+function scrollBottom(){ transcript.scrollTop = transcript.scrollHeight; }
+
+function renderTurn(role, text, {streaming=false}={}){
+  const turn = document.createElement('div');
+  turn.className = 'turn ' + role;
+  const who = document.createElement('div');
+  who.className = 'who';
+  who.textContent = role === 'user' ? 'You asked' : 'The answer';
+  const body = document.createElement('div');
+  body.className = 'body';
+  body.innerHTML = streaming ? '<span class="cursor"></span>' : marked.parse(text);
+  turn.appendChild(who); turn.appendChild(body);
+
+  if(role === 'assistant' && !streaming){
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    actions.innerHTML = '<button class="copyBtn">Copy</button><button class="regenBtn">Regenerate</button>';
+    actions.querySelector('.copyBtn').onclick = () => navigator.clipboard.writeText(text);
+    actions.querySelector('.regenBtn').onclick = () => regenerate();
+    turn.appendChild(actions);
+  }
+  messagesEl.appendChild(turn);
+  scrollBottom();
+  return body;
+}
+
+function showError(msg){ errorBox.textContent = msg; errorBox.style.display = 'block'; }
+function hideError(){ errorBox.style.display = 'none'; }
+
+async function sendMessage(text){
+
+  if(!text.trim()) return;
+
+  hideError();
+
+  if(landing.style.display !== 'none'){
+    landing.style.display = 'none';
+    transcript.style.display = 'block';
+  }
+
+  renderTurn('user', text);
+
+  lastUserMsg = text;
+
+  input.value = '';
+  autoGrow();
+
+  const bodyEl = renderTurn('assistant', '', {streaming:true});
+
+  sendBtn.disabled = true;
+
+  try{
+
+    const res = await fetch(CHAT_ENDPOINT, {
+       method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        question: text,
+        history: history,
+        job_description: jobDescription
+      })
+    });
+
+    console.log("CONTENT TYPE:", res.headers.get("content-type"));
+    console.log("STREAMING RESPONSE:", res);
+
+
+    if(!res.ok){
+      throw new Error('Server responded with ' + res.status);
+    }
+
+    // Streaming response read karo
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    let reply = '';
+
+    while(true){
+
+      const { value, done } = await reader.read();
+
+      if(done) break;
+
+      const chunk = decoder.decode(value, { stream:true });
+
+      reply += chunk;
+
+      // Response aate hi screen par show karo
+      bodyEl.textContent = reply;
+
+      scrollBottom();
+    }
+
+    // Streaming complete hone ke baad Markdown render karo
+    bodyEl.innerHTML = marked.parse(reply);
+
+    history.push({
+      role:'user',
+      content:text
+    });
+
+    history.push({
+      role:'assistant',
+      content:reply
+    });
+
+    scrollBottom();
+
+  }catch(err){
+
+    bodyEl.closest('.turn').remove();
+
+    showError(
+      "That didn't go through. The server might be offline — try again. (" +
+      err.message +
+      ")"
+    );
+
+  }finally{
+
+    sendBtn.disabled = false;
+
+  }
+
+}
+
+function regenerate(){ if(lastUserMsg) sendMessage(lastUserMsg); }
+
+jdBtn.onclick = () => jdFile.click();
+jdFile.onchange = async () => {
+
+  console.log("🔥 JD FILE CHANGE TRIGGERED");
+
+  const file = jdFile.files[0];
+  if(!file) return;
+
+  console.log("🔥 SELECTED FILE:", file.name);
+
+  jdName.textContent = 'Reading ' + file.name + '…';
+  jdTag.style.display = 'inline-flex';
+   try{
+
+  const formData = new FormData();
+
+  formData.append('file', file);
+
+  const res = await fetch(JD_ENDPOINT, {
+    method: 'POST',
+    body: formData
+  });
+
+  if(!res.ok){
+    throw new Error('Upload failed with ' + res.status);
+  }
+
+  const data = await res.json();
+
+  console.log("JD DATA:", data);
+
+  jobDescription = data.text;
+
+  jdName.textContent = 'JD attached: ' + file.name;
+
+}catch(err){
+
+  jdTag.style.display = 'none';
+
+  showError(
+    "Couldn't read that file — try a PDF, DOCX, or TXT. (" +
+    err.message +
+    ")"
+  );
+
+}
+};
+jdTag.querySelector('#jdClear').onclick = () => {
+  jobDescription = null; jdTag.style.display = 'none'; jdFile.value = '';
+};
+
+form.onsubmit = e => { e.preventDefault(); sendMessage(input.value); };
+input.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(input.value); }
+});
+function autoGrow(){ input.style.height='auto'; input.style.height = input.scrollHeight+'px'; }
+input.addEventListener('input', autoGrow);
+
+document.querySelectorAll('.prompt-btn').forEach(btn => {
+  btn.onclick = () => sendMessage(btn.textContent);
+});
+</script>
+</body>
+</html>
