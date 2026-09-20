@@ -18,8 +18,7 @@ dependencies = [
     "uvicorn>=0.53.0",
 ]
 
-[project.scripts]
-project-2 = "project_2:main"
+ 
 
 [build-system]
 requires = ["uv_build>=0.12.13,<0.13.0"]
