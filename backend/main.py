@@ -323,11 +323,19 @@ def download_resume():
     )
 @app.post("/chat")
 def chat(request: ChatRequest):
+    global resume_cache
+
     if resume_cache is None:
-        raise HTTPException(
-            status_code=503,
-            detail="Resume data isn't loaded. Check server logs / GROQ_API_KEY / resume.pdf path.",
-        )
+        try:
+            resume_text = read_pdf(RESUME_PATH)
+            resume_cache = parse_resume(resume_text)
+            logger.info("Resume loaded successfully on chat request.")
+        except Exception as e:
+            logger.error(f"Failed to load resume on chat request: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="Resume data isn't loaded. Please try again.",
+            )
 
     try:
         return StreamingResponse(
