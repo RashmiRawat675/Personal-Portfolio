@@ -37,6 +37,23 @@ RESUME_PATH = BASE_DIR / "resume.pdf"
 
 app = FastAPI(title="Portfolio AI Assistant")
 
+@app.get("/test-groq")
+async def test_groq():
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "user", "content": "Reply with only: OK"}
+            ],
+        )
+        return {"status": "success", "response": response.choices[0].message.content}
+    except Exception as e:
+        return {
+            "status": "error",
+            "type": type(e).__name__,
+            "error": str(e)
+        }
+
 # ---------------------------------------------------------------------------
 # CORS — required so a browser-hosted frontend on a different origin/port
 # is allowed to call this API. Lock allow_origins down to your real domain
